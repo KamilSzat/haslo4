@@ -1,47 +1,86 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 
 namespace haslo1
 {
     public partial class Form1 : Form
     {
-        string imie, nazwisko, stanowisko;
-        int haslodl;
+        private string imie = "";
+        private string nazwisko = "";
+        private string stanowisko = "";
+        private string haslo = ""; 
+        private string ZnakiLitery()
+        {
+            return checkBox4.Checked ? "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" : "";
+        }
+
+        private string ZnakiSpecjalne()
+        {
+            return checkBox5.Checked ? "!@#$%^&*()><?:" : "";
+        }
+
+        private string ZnakiCyfry()
+        {
+            return checkBox6.Checked ? "0123456789" : "";
+        }
+
         public Form1()
         {
             InitializeComponent();
-        }
-
-        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
+            checkBox4.Checked = true;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (imie == "" || nazwisko == "" ||  stanowisko == "" )
+            if (string.IsNullOrWhiteSpace(imie) || string.IsNullOrWhiteSpace(nazwisko) ||
+                string.IsNullOrWhiteSpace(stanowisko) || string.IsNullOrWhiteSpace(haslo))
             {
-                MessageBox.Show($"Dane pracownika: {imie}{nazwisko}, Stanowisko: {stanowisko} Hasło: {haslo1}");
+                MessageBox.Show("Proszę wypełnić wszystkie dane pracownika oraz wygenerować hasło.",
+                                "Brak danych", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+
+                MessageBox.Show($"Dane pracownika:\nImię: {imie}\nNazwisko: {nazwisko}\nStanowisko: {stanowisko}\nHasło: {haslo}",
+                                "Dane pracownika", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void button2_Click_1(object sender, EventArgs e)
+        {
+            if (!int.TryParse(textBox3.Text, out int dlugosc) || dlugosc <= 0)
+            {
+                MessageBox.Show("Wprowadź odpowiednią ilość znaków (liczbę całkowitą większą od zera).",
+                                "Błąd długości hasła", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-        }
-        private void button2_Click(object sender, EventArgs e)
-        {
 
-        }
+            if (dlugosc > 20)
+            {
+                MessageBox.Show("Maksymalna długość hasła to 20 znaków.",
+                                "Zbyt długa wartość", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; 
+            }
 
-        private void label3_Click(object sender, EventArgs e)
-        {
 
+            string znakiDostepne = ZnakiLitery() + ZnakiCyfry() + ZnakiSpecjalne();
+
+
+            if (string.IsNullOrEmpty(znakiDostepne))
+            {
+                MessageBox.Show("Zaznacz przynajmniej jeden typ znaków do wygenerowania hasła (litery, cyfry lub znaki specjalne).",
+                                "Brak wyboru znaków", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            Random rnd = new Random();
+            haslo = new string(Enumerable.Repeat(znakiDostepne, dlugosc)
+                .Select(s => s[rnd.Next(s.Length)])
+                .ToArray());
+
+            MessageBox.Show($"Wygenerowane hasło: {haslo}", "Hasło wygenerowane", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
@@ -49,59 +88,16 @@ namespace haslo1
             nazwisko = textBox1.Text;
         }
 
-        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            stanowisko = comboBox1.Text;
-        }
         private void textBox2_TextChanged(object sender, EventArgs e)
         {
             imie = textBox2.Text;
         }
-        private void textBox3_TextChanged(object sender, EventArgs e)
-        {
 
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            stanowisko = comboBox1.Text;
         }
 
-        private void checkBox4_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox4.Checked)
-            {
-                if(int.TryParse(checkBox3.Text, out int dlugosc) && dlugosc > 0)
-                {
-                    haslo1 = maleLitery("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", dlugosc);
-                }
-            }
-        }
-
-        private void checkBox5_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox5.Checked)
-            {
-                if (int.TryParse(checkBox3.Text, out int dlugosc) && dlugosc > 0)
-                {
-                    haslo1 = cyfry("0123456789", dlugosc);
-                }
-            }
-
-        }
-
-        private void checkBox6_CheckedChanged(object sender, EventArgs e)
-        {
-            if (checkBox6.Checked)
-            {
-                if (int.TryParse(checkBox3.Text, out int dlugosc) && dlugosc > 0)
-                {
-                    haslo1 = specjalne("!@#$%^&*().,", dlugosc);
-                }
-            }
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        
+ 
     }
 }
