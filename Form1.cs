@@ -98,6 +98,32 @@ namespace haslo1
             stanowisko = comboBox1.Text;
         }
 
- 
+        private void checkedListBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox6_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox5_CheckedChanged(object sender, EventArgs e)
+        {
+        }
+
+        private void checkBox4_CheckedChanged(object sender, EventArgs e)
+        {
+        }
     }
 }
